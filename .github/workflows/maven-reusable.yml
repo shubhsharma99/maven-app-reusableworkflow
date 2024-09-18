@@ -39,9 +39,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn ${{ inputs.maven_goals }}
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: application-jar
-          path: target/*.jar
