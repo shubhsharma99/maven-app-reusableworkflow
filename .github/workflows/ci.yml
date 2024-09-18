@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    uses: ./github/workflows/maven-reusable.yml
+    uses: ./.github/workflows/maven-reusable.yml@main
     with:
-      maven_goals: 'clean package'
-      java_version: '17'
+      maven_goals: 'clean install'
+      java_version: '11'
