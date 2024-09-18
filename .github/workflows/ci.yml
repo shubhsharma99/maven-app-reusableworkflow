@@ -1,0 +1,16 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./github/workflows/maven-reusable.yml
+    with:
+      maven_goals: 'clean package'
+      java_version: '17'
