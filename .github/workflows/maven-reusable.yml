@@ -1,0 +1,47 @@
+name: Maven Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      maven_goals:
+        description: 'Goals to pass to Maven (e.g., clean install)'
+        required: false
+        default: 'clean install'
+      java_version:
+        description: 'Java version to use (e.g., 11, 17)'
+        required: false
+        default: '11'
+    secrets:
+      MAVEN_SETTINGS:
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Java ${{ inputs.java_version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java_version }}
+          distribution: 'temurin'
+
+      - name: Cache Maven Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: mvn ${{ inputs.maven_goals }}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
